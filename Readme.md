@@ -2,7 +2,7 @@
 
 ## Functionality
 
-This project implements a custom PrometheusRule Validating Webhook that filters and validates the presence of certain fields inside PrometheusRule Groups in custo created prometheus rules.
+This project implements a custom PrometheusRule Validating Webhook that filters and validates the presence of certain fields inside PrometheusRule Groups in custom created prometheus rules.
 It only considers AdmissionReview objects for custom projects that have the `app.kubernetes.io/created-by: webhook-managed.project.example.com` label.
 See `helm/prometheusrule-validating-webhook/validatingWebhookConfiguration.yaml`:
 
