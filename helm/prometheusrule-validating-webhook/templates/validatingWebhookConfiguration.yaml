@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "prometheusrule-validating-webhook.name" . }}
+  annotations:
+    service.beta.openshift.io/inject-cabundle: "true"
+webhooks:
+- clientConfig:
+    caBundle: Cg==
+    service:
+      name: {{ include "prometheusrule-validating-webhook.name" . }}-service
+      namespace: {{ include "prometheusrule-validating-webhook.namespace" . }}
+      path: /validate-v1-prometheusrule
+  admissionReviewVersions: ["v1", "v1beta1"]
+  failurePolicy: Fail
+  timeoutSeconds: 10
+  sideEffects: None
+  name: prometheusrule-validating-webhook.example.com
+  namespaceSelector:
+    matchLabels:
+        {{ include "prometheusrule-validating-webhook.webhookLabels" . }}
+  rules:
+  - apiGroups:
+    - monitoring.coreos.com
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - prometheusrules

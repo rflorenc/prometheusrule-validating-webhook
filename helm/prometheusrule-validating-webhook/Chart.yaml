@@ -1,0 +1,8 @@
+apiVersion: v1
+name: prometheusrule-validating-webhook
+version: v1.0
+appVersion: v1.0
+description: Helm chart that deploys prometheusrule-validating-webhook
+sources:
+  - https://github.com/rflorenc/prometheusrule-validating-webhook
+engine: gotpl
