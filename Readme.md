@@ -1,5 +1,7 @@
 # PrometheusRule Admission Webhook
 
+Tested in Openshift v4.5. 
+
 ## Functionality
 
 This project implements a custom PrometheusRule Validating Webhook that filters and validates the presence of certain fields inside PrometheusRule Groups in custom created prometheus rules.
@@ -11,7 +13,6 @@ See `helm/prometheusrule-validating-webhook/validatingWebhookConfiguration.yaml`
     matchLabels:
         {{ include "prometheusrule-validating-webhook.webhookLabels" . }}
 ```
-
 
 ## Examples
 
