@@ -40,7 +40,7 @@ oc create -f hack/testlocal/mock-prometheus-rules-bad.yaml -n example
 Error from server (Missing one or more of minimum required labels. severity: false, example_response_code: false, example_alerting_email: true): error when creating "hack/testlocal/mock-prometheus-rules-bad.yaml": admission webhook "prometheusrule-validating-webhook.example.com" denied the request: Missing one or more of minimum required labels. severity: false, example_response_code: false, example_alerting_email: true
 ```
 
-3 - Allow admission of rule with missing field `example_response_code` in namespace which is not properly labeled by the webhook-managed.
+3 - Allow admission of rule with missing field `example_response_code` in namespace which is not properly labeled by the webhook.
 
 ```yaml
 oc get ns test-abc -o yaml
