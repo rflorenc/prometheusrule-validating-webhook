@@ -1,6 +1,6 @@
 # PrometheusRule Admission Webhook
 
-Tested in Openshift v4.5. 
+Tested in Openshift v4.9 and Kubernetes v1.22.
 
 ## Functionality
 
@@ -13,6 +13,7 @@ See `helm/prometheusrule-validating-webhook/validatingWebhookConfiguration.yaml`
     matchLabels:
         {{ include "prometheusrule-validating-webhook.webhookLabels" . }}
 ```
+
 
 ## Examples
 
