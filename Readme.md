@@ -17,63 +17,70 @@ See `helm/prometheusrule-validating-webhook/validatingWebhookConfiguration.yaml`
 
 ## Examples
 
+1 - Create `example` namespace with the `app.kubernetes.io/created-by: webhook-managed.project.example.com` label.
 ```bash
+cat <<EOF | oc create -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/created-by: webhook-managed.project.example.com
+  name: example
+EOF
+
 oc get ns -l app.kubernetes.io/created-by=webhook-managed.project.example.com
 NAME                 STATUS   AGE
-discovery-endpoint   Active   16d
-example-dev-dev            Active   62m
-example                Active   4d1h
-example-2              Active   28h
-example-with-label     Active   130m
+example                Active   6m58s
 ```
 
-1 - Allow admission of rule with all the required fields specified.
+1.1 - Allow admission of rule with all the required fields specified.
 
 ```bash
 oc create -f hack/testlocal/mock-prometheus-rules-good.yaml -n example
 prometheusrule.monitoring.coreos.com/mock-example-prometheus-rules created
 ```
 
-2 - Deny admission of rule with some of the required fields missing.
+1.2 - Deny admission of rule with some of the required fields missing.
 
 ```bash
 oc create -f hack/testlocal/mock-prometheus-rules-bad.yaml -n example
 Error from server (Missing one or more of minimum required labels. severity: false, example_response_code: false, example_alerting_email: true): error when creating "hack/testlocal/mock-prometheus-rules-bad.yaml": admission webhook "prometheusrule-validating-webhook.example.com" denied the request: Missing one or more of minimum required labels. severity: false, example_response_code: false, example_alerting_email: true
 ```
 
-3 - Allow admission of rule with missing field `example_response_code` in namespace which is not properly labeled by the webhook.
+2 - Create `test-abc` namespace without any labels.
 
-```yaml
-oc get ns test-abc -o yaml
+```bash
+cat <<EOF | oc create -f -
 apiVersion: v1
 kind: Namespace
 metadata:
-  ...
-  labels:
-    abc: def
+  name: test-abc
+EOF
 ```
+
+2.1 Allow admission of rule with missing field `example_response_code` in namespace which is not properly labeled by the webhook.
 
 ```bash
 oc create -f hack/testlocal/mock-prometheus-rules-other-namespace.yaml -n test-abc
 prometheusrule.monitoring.coreos.com/mock-example-prometheus-rules-bad created
 ```
 
-3.1 - Properly label `test-abc` namespace.
+2.2 - Properly label `test-abc` namespace.
 
 ```bash
 oc label ns test-abc app.kubernetes.io/created-by=webhook-managed.project.example.com
 ```
 
-3.2 - Deny admission of rule with missing field `example_response_code` in `test-abc` namespace which is now properly labeled.
+2.3 - Deny admission of rule with missing field `example_response_code` in `test-abc` namespace which is now properly labeled.
 
 ```bash
 oc create -f hack/testlocal/mock-prometheus-rules-other-namespace.yaml -n test-abc
 Error from server (Missing one or more of minimum required labels. severity: true, example_response_code: false, example_alerting_email: true): error when creating "hack/testlocal/mock-prometheus-rules-other-namespace.yaml": admission webhook "prometheusrule-validating-webhook.example.com" denied the request: Missing one or more of minimum required labels. severity: true, example_response_code: false, example_alerting_email: true
 ```
 
-## Installing in-cluster
+## Installing in-cluster (requires helm client)
 
-`helm-wrapper -u`
+`./helm-wrapper.sh -u`
 
 ## Building
 
