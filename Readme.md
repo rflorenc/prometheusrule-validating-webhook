@@ -80,7 +80,7 @@ Error from server (Missing one or more of minimum required labels. severity: tru
 
 ## Installing in-cluster (requires helm client)
 
-`./helm-wrapper -u`
+`./helm-wrapper.sh -u`
 
 ## Building
 
