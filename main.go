@@ -11,10 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	// "sigs.k8s.io/controller-runtime/pkg/webhook/authentication"
-
 	webhookadmission "github.com/rflorenc/prometheusrule-validating-webhook/admission"
-	// tokenreview "github.com/rflorenc/prometheusrule-validating-webhook/tokenreview"
 )
 
 func init() {
@@ -38,11 +35,7 @@ func main() {
 	hookServer := mgr.GetWebhookServer()
 
 	setupLog.Info("registering PrometheusRule validating webhook endpoint")
-
-	// hookServer.Register("/validate-v1-tokenreview", &authentication.Webhook{Handler: &tokenreview.TokenReviewer{}})
 	hookServer.Register("/validate-v1-prometheusrule", &webhook.Admission{Handler: &webhookadmission.PrometheusRuleValidator{Client: mgr.GetClient()}})
-
-	//hookServer.Register("/convert", &webhook)
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {

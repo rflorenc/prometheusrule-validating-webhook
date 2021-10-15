@@ -23,6 +23,8 @@ function upgrade_helm() {
     $dryrun \
     ./helm/${helm_chart_name} \
     -f ./helm/${helm_chart_name}/values.yaml
+
+  echo -e "\nInstalled in namespace: ${namespace}"
 }
 
 function remove_helm() {
